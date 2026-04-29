@@ -105,8 +105,8 @@ if command -v jenv > /dev/null 2>&1; then
   set +e
   set +u
   set +o pipefail
-  eval "$(jenv init -)" 2>/dev/null
-  jenv enable-plugin export 2>/dev/null
+  eval "$(jenv init -)" 2> /dev/null
+  jenv enable-plugin export 2> /dev/null
   set -e
   set -u
   set -o pipefail
