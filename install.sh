@@ -103,7 +103,7 @@ fi
 if command -v jenv > /dev/null 2>&1; then
   log "jenv export plugin を有効化"
   eval "$(jenv init -)" 2>/dev/null || true
-  run jenv enable-plugin export
+  run jenv enable-plugin export || true
 fi
 
 if [[ "${INSTALL_RUNTIMES}" == "true" ]]; then
