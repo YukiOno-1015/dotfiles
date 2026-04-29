@@ -7,16 +7,18 @@ BACKUP_DIR="${HOME}/.dotfiles-backup/$(date +%Y%m%d%H%M%S)"
 DRY_RUN=false
 RESTORE_SECRETS=false
 FORCE_SECRETS=false
+INSTALL_RUNTIMES=false
 
 usage() {
   cat << 'USAGE'
-使い方: ./install.sh [--dry-run] [--restore-secrets] [--force-secrets]
+使い方: ./install.sh [--dry-run] [--restore-secrets] [--force-secrets] [--install-runtimes]
 
 オプション:
-  --dry-run          ファイルを変更せず、実行内容だけ表示します。
-  --restore-secrets  Vault から SSH / AWS 認証情報を復元します。
-  --force-secrets    Vault からの復元時に既存ファイルも上書きします。
-  -h, --help         このヘルプを表示します。
+  --dry-run           ファイルを変更せず、実行内容だけ表示します。
+  --restore-secrets   Vault から SSH / AWS 認証情報を復元します。
+  --force-secrets     Vault からの復元時に既存ファイルも上書きします。
+  --install-runtimes  nodenv / uv で Node.js / Python をインストールします。
+  -h, --help          このヘルプを表示します。
 USAGE
 }
 
@@ -43,6 +45,9 @@ while [[ $# -gt 0 ]]; do
     --force-secrets)
       FORCE_SECRETS=true
       RESTORE_SECRETS=true
+      ;;
+    --install-runtimes)
+      INSTALL_RUNTIMES=true
       ;;
     -h | --help)
       usage
@@ -98,6 +103,23 @@ fi
 if command -v jenv > /dev/null 2>&1; then
   log "jenv export plugin を有効化"
   run jenv enable-plugin export
+fi
+
+if [[ "${INSTALL_RUNTIMES}" == "true" ]]; then
+  runtime_script="${DOTFILES_DIR}/scripts/install-runtimes.sh"
+
+  if [[ ! -x "${runtime_script}" ]]; then
+    log "ランタイムインストールスクリプトが見つからないか、実行できません: ${runtime_script}"
+    exit 1
+  fi
+
+  runtime_args=()
+  if [[ "${DRY_RUN}" == "true" ]]; then
+    runtime_args+=(--dry-run)
+  fi
+
+  log "Node.js / Python ランタイムをインストールします。"
+  "${runtime_script}" "${runtime_args[@]}"
 fi
 
 if [[ "${RESTORE_SECRETS}" == "true" ]]; then

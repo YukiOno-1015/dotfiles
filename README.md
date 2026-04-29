@@ -33,6 +33,18 @@ Vault から SSH / AWS 認証情報も復元する場合:
 ./install.sh --restore-secrets --force-secrets
 ```
 
+Node.js / Python の複数バージョンもまとめてインストールする場合:
+
+```bash
+./install.sh --install-runtimes
+```
+
+バージョンを指定する場合:
+
+```bash
+NODE_VERSIONS="20 22 24" UV_PYTHON_VERSIONS="3.11 3.12 3.13" ./install.sh --install-runtimes
+```
+
 ## 管理対象
 
 ```text
@@ -117,6 +129,40 @@ dotfiles 側では `~/.jenv/bin` を PATH に追加し、zsh 起動時に `jenv 
 jv  # jenv versions
 jl  # jenv local
 jg  # jenv global
+```
+
+## Node.js / nodenv
+
+Node.js の切り替えは `nodenv` を使います。`ansible-mac` 側で `nodenv` と `node-build` をインストールします。
+
+dotfiles 側では zsh 起動時に `nodenv init` を実行します。複数バージョンをまとめて入れる場合は `scripts/install-runtimes.sh` または `install.sh --install-runtimes` を使います。
+
+よく使う alias:
+
+```bash
+nv  # nodenv versions
+nl  # nodenv local
+ng  # nodenv global
+ni  # nodenv install
+nr  # nodenv rehash
+```
+
+## Python / uv
+
+Python は `uv` で複数バージョンとプロジェクトごとの `.venv` を扱います。
+
+dotfiles 側では `UV_PYTHON_INSTALL_DIR` と `UV_PROJECT_ENVIRONMENT=.venv` を設定します。複数 Python をまとめて入れる場合は `scripts/install-runtimes.sh` または `install.sh --install-runtimes` を使います。
+
+よく使う alias / function:
+
+```bash
+uvp         # uv python list
+uvpi        # uv python install
+uvs         # uv sync
+uvr         # uv run
+uvv         # uv venv
+uva         # source .venv/bin/activate
+uvvenv 3.12 # uv venv --python 3.12 .venv
 ```
 
 ## ファイルを追加する

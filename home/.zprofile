@@ -12,6 +12,8 @@ fi
 export EDITOR=vim
 export LANG=ja_JP.UTF-8
 export LC_ALL=ja_JP.UTF-8
+export UV_PYTHON_INSTALL_DIR="$HOME/.local/share/uv/python"
+export UV_PROJECT_ENVIRONMENT=".venv"
 
 # ユーザー用 PATH
 path=(
