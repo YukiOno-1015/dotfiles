@@ -103,9 +103,13 @@ fi
 if command -v jenv > /dev/null 2>&1; then
   log "jenv export plugin を有効化"
   set +e
+  set +u
+  set +o pipefail
   eval "$(jenv init -)" 2>/dev/null
   jenv enable-plugin export 2>/dev/null
   set -e
+  set -u
+  set -o pipefail
 fi
 
 if [[ "${INSTALL_RUNTIMES}" == "true" ]]; then
