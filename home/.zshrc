@@ -44,6 +44,25 @@ alias gl='git log --oneline --graph --decorate'
 alias jv='jenv versions'
 alias jl='jenv local'
 alias jg='jenv global'
+alias nv='nodenv versions'
+alias nl='nodenv local'
+alias ng='nodenv global'
+alias ni='nodenv install'
+alias nr='nodenv rehash'
+alias uvp='uv python list'
+alias uvpi='uv python install'
+alias uvs='uv sync'
+alias uvr='uv run'
+alias uvv='uv venv'
+alias uva='source .venv/bin/activate'
+
+uvvenv() {
+  if [[ $# -gt 0 ]]; then
+    uv venv --python "$1" .venv
+  else
+    uv venv .venv
+  fi
+}
 
 if command -v eza >/dev/null 2>&1; then
   alias ls='eza --group-directories-first --icons=auto'
