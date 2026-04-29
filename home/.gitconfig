@@ -7,7 +7,7 @@
 
 [core]
 	editor = vim
-	excludesfile = ~/.gitignore_global
+	excludesfile = /Users/yukiono/.gitignore_global
 	autocrlf = input
 	ignorecase = false
 
