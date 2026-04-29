@@ -21,6 +21,11 @@ export VAULT_ADDR="https://vault.example.internal:8200"
 export VAULT_FORMAT=json
 export VAULT_MOUNT=kv-dotfiles
 export VAULT_PREFIX=dotfiles/mac
+export VAULT_BOOTSTRAP_TOKEN=true
+export VAULT_BOOTSTRAP_SSH_HOST=vault01
+export VAULT_BOOTSTRAP_ADDR=http://127.0.0.1:8200
+export VAULT_BOOTSTRAP_POLICY=dotfiles-mac
+export VAULT_BOOTSTRAP_PERIOD=720h
 ```
 
 ## SSH / AWS の投入
@@ -69,6 +74,8 @@ vault login
 scripts/vault-restore-local-secrets.sh --dry-run
 scripts/vault-restore-local-secrets.sh
 ```
+
+`~/.vault-token` が無い、または無効な場合は、既定で `vault01` に SSH して dotfiles 用の限定 token を取得します。自動取得しない場合は `--no-bootstrap-token` を付けます。
 
 復元先:
 

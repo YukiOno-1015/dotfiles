@@ -6,6 +6,11 @@ set -euo pipefail
 
 VAULT_MOUNT="${VAULT_MOUNT:-kv-dotfiles}"
 VAULT_PREFIX="${VAULT_PREFIX:-dotfiles/mac}"
+VAULT_BOOTSTRAP_TOKEN="${VAULT_BOOTSTRAP_TOKEN:-true}"
+VAULT_BOOTSTRAP_SSH_HOST="${VAULT_BOOTSTRAP_SSH_HOST:-vault01}"
+VAULT_BOOTSTRAP_ADDR="${VAULT_BOOTSTRAP_ADDR:-http://127.0.0.1:8200}"
+VAULT_BOOTSTRAP_POLICY="${VAULT_BOOTSTRAP_POLICY:-dotfiles-mac}"
+VAULT_BOOTSTRAP_PERIOD="${VAULT_BOOTSTRAP_PERIOD:-720h}"
 SSH_DIR="${SSH_DIR:-$HOME/.ssh}"
 AWS_DIR="${AWS_DIR:-$HOME/.aws}"
 DRY_RUN=false
@@ -19,14 +24,20 @@ usage() {
   VAULT_ADDR      Vault の接続先です。例: http://192.168.100.161:8200
   VAULT_MOUNT     KV secrets engine の mount 名です。既定値: kv-dotfiles
   VAULT_PREFIX    復元元の prefix です。既定値: dotfiles/mac
+  VAULT_BOOTSTRAP_TOKEN     token がない場合に SSH 経由で取得するかです。既定値: true
+  VAULT_BOOTSTRAP_SSH_HOST  token 発行に使う SSH Host です。既定値: vault01
+  VAULT_BOOTSTRAP_ADDR      サーバ上で使う Vault 接続先です。既定値: http://127.0.0.1:8200
+  VAULT_BOOTSTRAP_POLICY    発行する token の policy です。既定値: dotfiles-mac
+  VAULT_BOOTSTRAP_PERIOD    発行する token の period です。既定値: 720h
   SSH_DIR         SSH ファイルの復元先です。既定値: ~/.ssh
   AWS_DIR         AWS ファイルの復元先です。既定値: ~/.aws
 
 オプション:
   --dry-run       ファイルを変更せず、実行内容だけ表示します。
   --force         既存ファイルも上書きします。
+  --no-bootstrap-token  SSH 経由の Vault token 取得を行いません。
 
-事前に `vault login` を済ませてください。
+通常は `~/.vault-token` が無い場合も自動取得します。
 USAGE
 }
 
@@ -55,6 +66,49 @@ vault_field() {
   local path="$1"
   local field="$2"
   vault kv get -field="${field}" -mount="${VAULT_MOUNT}" "$(vault_path "${path}")"
+}
+
+has_vault_token() {
+  [[ -f "${HOME}/.vault-token" ]] || return 1
+  vault token lookup > /dev/null 2>&1
+}
+
+bootstrap_vault_token() {
+  local remote_command
+  local token_tmp
+
+  if [[ "${VAULT_BOOTSTRAP_TOKEN}" != "true" ]]; then
+    log "Vault token が見つからないか無効です。vault login を実行してください。"
+    exit 1
+  fi
+
+  require_command ssh
+
+  if [[ "${DRY_RUN}" == "true" ]]; then
+    log "[dry-run] ${VAULT_BOOTSTRAP_SSH_HOST} から Vault token を取得して ${HOME}/.vault-token に保存します。"
+    return
+  fi
+
+  remote_command="$(
+    printf 'export VAULT_ADDR=%q; vault token create -policy=%q -period=%q -field=token' \
+      "${VAULT_BOOTSTRAP_ADDR}" \
+      "${VAULT_BOOTSTRAP_POLICY}" \
+      "${VAULT_BOOTSTRAP_PERIOD}"
+  )"
+  token_tmp="${HOME}/.vault-token.tmp.$$"
+
+  log "${VAULT_BOOTSTRAP_SSH_HOST} から Vault token を取得します。"
+  # remote_command はローカルで安全に quote 済み。
+  # shellcheck disable=SC2029
+  if ! ssh "${VAULT_BOOTSTRAP_SSH_HOST}" "${remote_command}" > "${token_tmp}"; then
+    rm -f "${token_tmp}"
+    log "Vault token の取得に失敗しました。"
+    exit 1
+  fi
+
+  chmod 600 "${token_tmp}"
+  mv "${token_tmp}" "${HOME}/.vault-token"
+  log "Vault token を ${HOME}/.vault-token に保存しました。"
 }
 
 write_secret_file() {
@@ -87,6 +141,9 @@ while [[ $# -gt 0 ]]; do
     --force)
       FORCE=true
       ;;
+    --no-bootstrap-token)
+      VAULT_BOOTSTRAP_TOKEN=false
+      ;;
     -h | --help)
       usage
       exit 0
@@ -110,6 +167,9 @@ if [[ -z "${VAULT_ADDR:-}" ]]; then
 fi
 
 if [[ "${DRY_RUN}" != "true" ]]; then
+  if ! has_vault_token; then
+    bootstrap_vault_token
+  fi
   vault status > /dev/null
 fi
 

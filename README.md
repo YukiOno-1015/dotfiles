@@ -105,10 +105,11 @@ Vault から SSH / AWS 認証情報を復元する場合:
 
 ```bash
 source ~/.vault.env
-vault login
 scripts/vault-restore-local-secrets.sh --dry-run
 scripts/vault-restore-local-secrets.sh
 ```
+
+`~/.vault-token` が無い、または無効な場合は、既定で `vault01` に SSH して dotfiles 用の限定 token を取得します。自動取得しない場合は `--no-bootstrap-token` を付けます。
 
 既存ファイルも上書きする場合は `--force` を付けます。
 `install.sh --restore-secrets` から呼び出すこともできます。
