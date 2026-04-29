@@ -1,0 +1,84 @@
+# dotfiles 内の秘密情報
+home/.vault-token
+home/.vault.env
+home/.config/vault/config.hcl
+home/.config/vault/*.local.hcl
+home/.aws/credentials
+home/.aws/sso/
+home/.aws/cli/cache/
+home/.ssh/authorized_keys
+home/.ssh/known_hosts*
+home/.ssh/config.local
+home/.ssh/*_rsa
+home/.ssh/*_dsa
+home/.ssh/*_ecdsa
+home/.ssh/*_ed25519
+home/.ssh/id_*
+home/.ssh/*.pem
+home/.ssh/*.ppk
+
+# macOS
+.DS_Store
+._*
+*.icloud
+
+# エディタ・一時ファイル
+*.swp
+*.swo
+*~
+*.tmp
+*.bak
+*.orig
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Terraform
+**/.terraform/*
+*.tfstate
+*.tfstate.*
+*.tfvars
+*.tfvars.json
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+crash.log
+crash.*.log
+
+# Ansible
+*.retry
+
+# Java・ビルド成果物
+*.class
+*.jar
+*.war
+*.ear
+build/
+dist/
+target/
+
+# ログ・カバレッジ
+*.log
+.coverage
+.coverage.*
+coverage/
+htmlcov/

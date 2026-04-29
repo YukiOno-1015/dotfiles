@@ -1,0 +1,48 @@
+[user]
+	name = YukiOno-1015
+	email = sk4869pw4869@gmail.com
+
+[init]
+	defaultBranch = main
+
+[core]
+	editor = vim
+	excludesfile = ~/.gitignore_global
+	autocrlf = input
+	ignorecase = false
+
+[pull]
+	rebase = false
+
+[push]
+	default = current
+	autoSetupRemote = true
+
+[fetch]
+	prune = true
+
+[rebase]
+	autoStash = true
+
+[merge]
+	conflictstyle = zdiff3
+
+[diff]
+	algorithm = histogram
+	colorMoved = default
+
+[color]
+	ui = auto
+
+[alias]
+	st = status --short
+	co = checkout
+	br = branch
+	ci = commit
+	sw = switch
+	lg = log --oneline --graph --decorate --all
+	last = log -1 HEAD --stat
+	uncommit = reset --soft HEAD~1
+
+[include]
+	path = ~/.gitconfig.local

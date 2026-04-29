@@ -1,0 +1,5 @@
+# このファイルを ~/.config/vault/config.hcl にコピーして、ローカルで編集する。
+# 公開リポジトリにする場合は、実際の内部ホスト名を含めない。
+
+# address = "http://192.168.100.161:8200"
+# tls_skip_verify = false
