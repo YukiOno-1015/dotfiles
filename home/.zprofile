@@ -15,13 +15,14 @@ export LC_ALL=ja_JP.UTF-8
 
 # ユーザー用 PATH
 path=(
+  "$HOME/.jenv/bin"
   "$HOME/.local/bin"
   "$HOME/bin"
   $path
 )
 
-# Homebrew で入れた Java
-if [[ -d /opt/homebrew/opt/openjdk@21 ]]; then
+# jenv が未導入の環境だけ、Homebrew で入れた Java を fallback として使う。
+if ! command -v jenv >/dev/null 2>&1 && [[ -d /opt/homebrew/opt/openjdk@21 ]]; then
   export JAVA_HOME="/opt/homebrew/opt/openjdk@21"
   path=("$JAVA_HOME/bin" $path)
 fi
