@@ -126,7 +126,11 @@ if [[ "${INSTALL_RUNTIMES}" == "true" ]]; then
   fi
 
   log "Node.js / Python ランタイムをインストールします。"
-  "${runtime_script}" "${runtime_args[@]}"
+  if [[ ${#runtime_args[@]} -gt 0 ]]; then
+    "${runtime_script}" "${runtime_args[@]}"
+  else
+    "${runtime_script}"
+  fi
 fi
 
 if [[ "${RESTORE_SECRETS}" == "true" ]]; then
@@ -155,7 +159,11 @@ if [[ "${RESTORE_SECRETS}" == "true" ]]; then
   fi
 
   log "Vault から SSH / AWS 認証情報を復元します。"
-  "${restore_script}" "${restore_args[@]}"
+  if [[ ${#restore_args[@]} -gt 0 ]]; then
+    "${restore_script}" "${restore_args[@]}"
+  else
+    "${restore_script}"
+  fi
 fi
 
 log "完了しました。"
