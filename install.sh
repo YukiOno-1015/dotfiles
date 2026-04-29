@@ -95,6 +95,11 @@ if command -v git > /dev/null 2>&1; then
   run git config --global core.excludesfile "${HOME}/.gitignore_global"
 fi
 
+if command -v jenv > /dev/null 2>&1; then
+  log "jenv export plugin を有効化"
+  run jenv enable-plugin export
+fi
+
 if [[ "${RESTORE_SECRETS}" == "true" ]]; then
   restore_script="${DOTFILES_DIR}/scripts/vault-restore-local-secrets.sh"
 

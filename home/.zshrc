@@ -8,6 +8,11 @@ if command -v nodenv >/dev/null 2>&1; then
   eval "$(nodenv init - zsh)"
 fi
 
+# jenv
+if command -v jenv >/dev/null 2>&1; then
+  eval "$(jenv init - zsh)"
+fi
+
 # 履歴
 HISTFILE="$HOME/.zsh_history"
 HISTSIZE=100000
@@ -36,6 +41,9 @@ alias g='git'
 alias gs='git status --short'
 alias gd='git diff'
 alias gl='git log --oneline --graph --decorate'
+alias jv='jenv versions'
+alias jl='jenv local'
+alias jg='jenv global'
 
 if command -v eza >/dev/null 2>&1; then
   alias ls='eza --group-directories-first --icons=auto'
