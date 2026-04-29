@@ -12,7 +12,7 @@ DRY_RUN=false
 FORCE=false
 
 usage() {
-  cat <<'USAGE'
+  cat << 'USAGE'
 使い方: scripts/vault-restore-local-secrets.sh [--dry-run] [--force]
 
 環境変数:
@@ -35,7 +35,7 @@ log() {
 }
 
 require_command() {
-  if ! command -v "$1" >/dev/null 2>&1; then
+  if ! command -v "$1" > /dev/null 2>&1; then
     log "コマンドが見つかりません: $1"
     exit 1
   fi
@@ -46,9 +46,9 @@ vault_path() {
 }
 
 vault_list() {
-  vault kv list -format=json -mount="${VAULT_MOUNT}" "$(vault_path "$1")" 2>/dev/null \
-    | tr -d '[]",' \
-    | awk 'NF { print $1 }'
+  vault kv list -format=json -mount="${VAULT_MOUNT}" "$(vault_path "$1")" 2> /dev/null |
+    tr -d '[]",' |
+    awk 'NF { print $1 }'
 }
 
 vault_field() {
@@ -87,7 +87,7 @@ while [[ $# -gt 0 ]]; do
     --force)
       FORCE=true
       ;;
-    -h|--help)
+    -h | --help)
       usage
       exit 0
       ;;
@@ -110,7 +110,7 @@ if [[ -z "${VAULT_ADDR:-}" ]]; then
 fi
 
 if [[ "${DRY_RUN}" != "true" ]]; then
-  vault status >/dev/null
+  vault status > /dev/null
 fi
 
 if [[ "${DRY_RUN}" == "true" ]]; then
@@ -129,13 +129,13 @@ done < <(vault_list ssh/config.d)
 
 while IFS= read -r name; do
   [[ -n "${name}" ]] || continue
-  mode="$(vault_field "ssh/keys/${name}" mode 2>/dev/null || printf '600')"
+  mode="$(vault_field "ssh/keys/${name}" mode 2> /dev/null || printf '600')"
   write_secret_file "ssh/keys/${name}" content "${SSH_DIR}/${name}" "${mode}"
 done < <(vault_list ssh/keys)
 
 while IFS= read -r name; do
   [[ -n "${name}" ]] || continue
-  mode="$(vault_field "ssh/public_keys/${name}" mode 2>/dev/null || printf '644')"
+  mode="$(vault_field "ssh/public_keys/${name}" mode 2> /dev/null || printf '644')"
   write_secret_file "ssh/public_keys/${name}" content "${SSH_DIR}/${name}" "${mode}"
 done < <(vault_list ssh/public_keys)
 

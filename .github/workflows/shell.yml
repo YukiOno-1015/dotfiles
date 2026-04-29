@@ -1,0 +1,30 @@
+name: Shell
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  lint:
+    name: Shell lint
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: チェックアウト
+        uses: actions/checkout@v4
+
+      - name: ツールをインストール
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y shellcheck shfmt
+
+      - name: 構文チェック
+        run: bash -n install.sh scripts/*.sh
+
+      - name: 静的チェック
+        run: shellcheck install.sh scripts/*.sh
+
+      - name: フォーマット確認
+        run: shfmt -d -i 2 -ci -sr install.sh scripts/*.sh

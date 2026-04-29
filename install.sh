@@ -9,7 +9,7 @@ RESTORE_SECRETS=false
 FORCE_SECRETS=false
 
 usage() {
-  cat <<'USAGE'
+  cat << 'USAGE'
 使い方: ./install.sh [--dry-run] [--restore-secrets] [--force-secrets]
 
 オプション:
@@ -44,7 +44,7 @@ while [[ $# -gt 0 ]]; do
       FORCE_SECRETS=true
       RESTORE_SECRETS=true
       ;;
-    -h|--help)
+    -h | --help)
       usage
       exit 0
       ;;
@@ -90,7 +90,7 @@ while IFS= read -r -d '' file; do
   link_file "${file}"
 done < <(find "${SOURCE_DIR}" -type f -print0 | sort -z)
 
-if command -v git >/dev/null 2>&1; then
+if command -v git > /dev/null 2>&1; then
   log "git core.excludesfile を設定"
   run git config --global core.excludesfile "${HOME}/.gitignore_global"
 fi
@@ -107,7 +107,7 @@ if [[ "${RESTORE_SECRETS}" == "true" ]]; then
     # shellcheck disable=SC1091
     source "${HOME}/.vault.env"
   elif [[ -f "${HOME}/.vault.env.example" ]]; then
-    log "~/.vault.env がないため ~/.vault.env.example を読み込みます。必要に応じて ~/.vault.env を作成してください。"
+    log "${HOME}/.vault.env がないため ${HOME}/.vault.env.example を読み込みます。必要に応じて ${HOME}/.vault.env を作成してください。"
     # shellcheck disable=SC1091
     source "${HOME}/.vault.env.example"
   fi

@@ -11,7 +11,7 @@ AWS_DIR="${AWS_DIR:-$HOME/.aws}"
 DRY_RUN=false
 
 usage() {
-  cat <<'USAGE'
+  cat << 'USAGE'
 使い方: scripts/vault-import-local-secrets.sh [--dry-run]
 
 環境変数:
@@ -49,7 +49,7 @@ run() {
 }
 
 require_command() {
-  if ! command -v "$1" >/dev/null 2>&1; then
+  if ! command -v "$1" > /dev/null 2>&1; then
     log "コマンドが見つかりません: $1"
     exit 1
   fi
@@ -65,7 +65,7 @@ vault_kv_put() {
   if [[ "${DRY_RUN}" == "true" ]]; then
     run vault kv put -mount="${VAULT_MOUNT}" "$(vault_path "${path}")" "$@"
   else
-    vault kv put -mount="${VAULT_MOUNT}" "$(vault_path "${path}")" "$@" >/dev/null
+    vault kv put -mount="${VAULT_MOUNT}" "$(vault_path "${path}")" "$@" > /dev/null
   fi
 }
 
@@ -75,13 +75,13 @@ is_ssh_private_key() {
   [[ -f "${file}" ]] || return 1
 
   case "$(basename "${file}")" in
-    *.pub|known_hosts|known_hosts.old|authorized_keys|config|*.bak|*.xml|.DS_Store)
+    *.pub | known_hosts | known_hosts.old | authorized_keys | config | *.bak | *.xml | .DS_Store)
       return 1
       ;;
   esac
 
   case "${file}" in
-    */config.d/*|*/backup/*|*/.vscode/*)
+    */config.d/* | */backup/* | */.vscode/*)
       return 1
       ;;
   esac
@@ -91,7 +91,7 @@ is_ssh_private_key() {
   fi
 
   case "${file}" in
-    *.pem|*.ppk)
+    *.pem | *.ppk)
       return 0
       ;;
   esac
@@ -104,7 +104,7 @@ while [[ $# -gt 0 ]]; do
     --dry-run)
       DRY_RUN=true
       ;;
-    -h|--help)
+    -h | --help)
       usage
       exit 0
       ;;
@@ -127,7 +127,7 @@ if [[ "${DRY_RUN}" != "true" ]]; then
     log "VAULT_ADDR が設定されていません。~/.vault.env を作成して読み込むか、環境変数で指定してください。"
     exit 1
   fi
-  vault status >/dev/null
+  vault status > /dev/null
 fi
 
 if [[ -f "${SSH_DIR}/config" ]]; then
