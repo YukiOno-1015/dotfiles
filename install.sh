@@ -159,10 +159,18 @@ if [[ "${RESTORE_SECRETS}" == "true" ]]; then
   fi
 
   log "Vault から SSH / AWS 認証情報を復元します。"
+  set +e
   if [[ ${#restore_args[@]} -gt 0 ]]; then
     "${restore_script}" "${restore_args[@]}"
   else
     "${restore_script}"
+  fi
+  restore_rc=$?
+  set -e
+
+  if [[ ${restore_rc} -ne 0 ]]; then
+    log "Vault 復元は失敗しましたが、dotfiles セットアップは継続します。"
+    log "必要に応じて vault login 後に ./install.sh --restore-secrets --force を再実行してください。"
   fi
 fi
 
