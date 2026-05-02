@@ -13,6 +13,7 @@ VAULT_BOOTSTRAP_POLICY="${VAULT_BOOTSTRAP_POLICY:-dotfiles-mac}"
 VAULT_BOOTSTRAP_PERIOD="${VAULT_BOOTSTRAP_PERIOD:-720h}"
 SSH_DIR="${SSH_DIR:-$HOME/.ssh}"
 AWS_DIR="${AWS_DIR:-$HOME/.aws}"
+SECRETS_ENV_FILE="${SECRETS_ENV_FILE:-$HOME/.secrets.env}"
 DRY_RUN=false
 FORCE=false
 
@@ -31,6 +32,7 @@ usage() {
   VAULT_BOOTSTRAP_PERIOD    発行する token の period です。既定値: 720h
   SSH_DIR         SSH ファイルの復元先です。既定値: ~/.ssh
   AWS_DIR         AWS ファイルの復元先です。既定値: ~/.aws
+  SECRETS_ENV_FILE  シェル用 secrets env の復元先です。既定値: ~/.secrets.env
 
 オプション:
   --dry-run       ファイルを変更せず、実行内容だけ表示します。
@@ -199,6 +201,12 @@ while IFS= read -r name; do
   write_secret_file "ssh/public_keys/${name}" content "${SSH_DIR}/${name}" "${mode}"
 done < <(vault_list ssh/public_keys)
 
+while IFS= read -r name; do
+  [[ -n "${name}" ]] || continue
+  mode="$(vault_field "ssh/xml/${name}" mode 2> /dev/null || printf '600')"
+  write_secret_file "ssh/xml/${name}" content "${SSH_DIR}/${name}" "${mode}"
+done < <(vault_list ssh/xml)
+
 if [[ "${DRY_RUN}" == "true" ]]; then
   log "[dry-run] ディレクトリ作成: ${AWS_DIR} (700)"
 else
@@ -208,5 +216,10 @@ fi
 
 write_secret_file aws config "${AWS_DIR}/config" 600
 write_secret_file aws credentials "${AWS_DIR}/credentials" 600
+
+if [[ "${DRY_RUN}" == "true" ]] || vault kv get -mount="${VAULT_MOUNT}" "$(vault_path secrets/env)" > /dev/null 2>&1; then
+  mode="$(vault_field secrets/env mode 2> /dev/null || printf '600')"
+  write_secret_file secrets/env content "${SECRETS_ENV_FILE}" "${mode}"
+fi
 
 log "完了しました。"

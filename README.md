@@ -92,7 +92,7 @@ vim ~/.vault.env
 
 管理するのは `~/.config/vault/config.hcl.example` のような雛形だけです。
 
-現在の SSH / AWS 認証情報を Vault に投入する場合:
+現在の SSH / AWS / `~/.secrets.env` を Vault に投入する場合:
 
 ```bash
 source ~/.vault.env
@@ -101,7 +101,7 @@ scripts/vault-import-local-secrets.sh --dry-run
 scripts/vault-import-local-secrets.sh
 ```
 
-Vault から SSH / AWS 認証情報を復元する場合:
+Vault から SSH / AWS / `~/.secrets.env` を復元する場合:
 
 ```bash
 source ~/.vault.env

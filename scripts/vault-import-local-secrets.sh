@@ -8,6 +8,7 @@ VAULT_MOUNT="${VAULT_MOUNT:-kv-dotfiles}"
 VAULT_PREFIX="${VAULT_PREFIX:-dotfiles/mac}"
 SSH_DIR="${SSH_DIR:-$HOME/.ssh}"
 AWS_DIR="${AWS_DIR:-$HOME/.aws}"
+SECRETS_ENV_FILE="${SECRETS_ENV_FILE:-$HOME/.secrets.env}"
 DRY_RUN=false
 
 usage() {
@@ -20,12 +21,15 @@ usage() {
   VAULT_PREFIX    投入先の prefix です。既定値: dotfiles/mac
   SSH_DIR         SSH ファイルの読み取り元です。既定値: ~/.ssh
   AWS_DIR         AWS ファイルの読み取り元です。既定値: ~/.aws
+  SECRETS_ENV_FILE  シェル用 secrets env の読み取り元です。既定値: ~/.secrets.env
 
 投入先:
   <mount> の <prefix>/ssh/config
   <mount> の <prefix>/ssh/keys/<file-name>
   <mount> の <prefix>/ssh/public_keys/<file-name>
+  <mount> の <prefix>/ssh/xml/<file-name>
   <mount> の <prefix>/aws
+  <mount> の <prefix>/secrets/env
 
 事前に `vault login` を済ませてください。
 USAGE
@@ -159,6 +163,13 @@ while IFS= read -r -d '' file; do
   vault_kv_put "ssh/public_keys/${key_name}" "content=@${file}" "mode=${file_mode}"
 done < <(find "${SSH_DIR}" -maxdepth 1 -type f -name '*.pub' -print0 | sort -z)
 
+log "SSH 配下の XML (FileZilla 等) を Vault に投入します。"
+while IFS= read -r -d '' file; do
+  xml_name="$(basename "${file}")"
+  file_mode="$(stat -f '%Lp' "${file}")"
+  vault_kv_put "ssh/xml/${xml_name}" "content=@${file}" "mode=${file_mode}"
+done < <(find "${SSH_DIR}" -maxdepth 1 -type f -name '*.xml' -print0 | sort -z)
+
 aws_args=()
 if [[ -f "${AWS_DIR}/config" ]]; then
   aws_args+=("config=@${AWS_DIR}/config")
@@ -170,6 +181,12 @@ fi
 if [[ "${#aws_args[@]}" -gt 0 ]]; then
   log "AWS config / credentials を Vault に投入します。"
   vault_kv_put aws "${aws_args[@]}"
+fi
+
+if [[ -f "${SECRETS_ENV_FILE}" ]]; then
+  log "secrets env (${SECRETS_ENV_FILE}) を Vault に投入します。"
+  file_mode="$(stat -f '%Lp' "${SECRETS_ENV_FILE}")"
+  vault_kv_put secrets/env "content=@${SECRETS_ENV_FILE}" "mode=${file_mode}"
 fi
 
 log "完了しました。"
