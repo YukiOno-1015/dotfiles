@@ -53,12 +53,16 @@ home/
 │   ├── README.md
 │   └── config
 ├── .config/
+│   ├── uv/
+│   │   └── uv.toml
 │   ├── vault/
 │   │   ├── README.md
 │   │   └── config.hcl.example
 │   └── wezterm/
 │       ├── keybinds.lua
 │       └── wezterm.lua
+├── .docker/
+│   └── daemon.json
 ├── .gitconfig
 ├── .gitignore_global
 ├── .hgignore_global
@@ -165,6 +169,20 @@ uvv         # uv venv
 uva         # source .venv/bin/activate
 uvvenv 3.12 # uv venv --python 3.12 .venv
 ```
+
+## Nexus (Docker / npm / PyPI proxy)
+
+社内 Nexus を経由して各種パッケージを取得するための設定をまとめて管理します。Nexus 側にはあらかじめ proxy リポジトリを作成しておきます。
+
+- Docker: `nexus-docker.sk4869.info` (docker-proxy)
+- npm: `https://nexus-cli.sk4869.info/repository/npm-proxy/`
+- PyPI (uv): `https://nexus-cli.sk4869.info/repository/pypi-proxy/simple`
+
+該当するファイル:
+
+- `home/.docker/daemon.json` — Docker Desktop の registry-mirrors。Docker Desktop 設定 → Docker Engine から Apply & Restart で反映。認証要なら `docker login nexus-docker.sk4869.info` を一度実行(資格情報は keychain に保存)。
+- `home/.npmrc` — `registry=` で Nexus を既定に。プロジェクト固有にしたければ `<repo>/.npmrc` を別途置く。認証要なら `npm login --registry=https://nexus-cli.sk4869.info/repository/npm-proxy/`。
+- `home/.config/uv/uv.toml` — `[[index]]` で Nexus を default 化。`UV_INDEX_URL` で上書きも可能。pip 側でも使うなら `~/.pip/pip.conf` の `index-url` に同じ URL を書く。
 
 ## ファイルを追加する
 

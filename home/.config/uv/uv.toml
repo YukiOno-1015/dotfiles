@@ -1,0 +1,4 @@
+[[index]]
+name = "nexus"
+url = "https://nexus-cli.sk4869.info/repository/pypi-proxy/simple"
+default = true
