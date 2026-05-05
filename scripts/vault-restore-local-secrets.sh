@@ -58,6 +58,14 @@ vault_path() {
   printf '%s/%s' "${VAULT_PREFIX}" "$1"
 }
 
+# stat の構文が macOS (BSD) と Linux (GNU) で異なるので吸収する。
+file_mode() {
+  case "$(uname -s)" in
+    Linux) stat -c '%a' "$1" ;;
+    *)     stat -f '%Lp' "$1" ;;
+  esac
+}
+
 vault_list() {
   vault kv list -format=json -mount="${VAULT_MOUNT}" "$(vault_path "$1")" 2> /dev/null |
     tr -d '[]",' |

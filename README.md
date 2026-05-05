@@ -5,8 +5,10 @@ Mac の設定ファイルを管理するための dotfiles です。
 ## 方針
 
 - `home/` 配下のファイルを `$HOME` にシンボリックリンクします。
+- macOS では `home.darwin/`、Linux では `home.linux/` を追加で重ねて symlink します (OS 固有の上書き)。
 - 既存ファイルがある場合は `~/.dotfiles-backup/<timestamp>/` に退避します。
 - 秘密情報、端末固有の設定、巨大な生成物はコミットしません。
+- 端末固有の zsh 上書きは git 管理しない `~/.zshrc.local` に置けば末尾で読み込まれます。
 
 ## セットアップ
 
@@ -61,8 +63,6 @@ home/
 │   └── wezterm/
 │       ├── keybinds.lua
 │       └── wezterm.lua
-├── .docker/
-│   └── daemon.json
 ├── .gitconfig
 ├── .gitignore_global
 ├── .hgignore_global
@@ -83,6 +83,12 @@ home/
 ├── .vimrc
 ├── .zprofile
 └── .zshrc
+
+home.darwin/                 # macOS でのみ symlink される
+└── .docker/
+    └── daemon.json
+
+home.linux/                  # Ubuntu 等でのみ symlink される (現状は空)
 ```
 
 ## Vault
@@ -180,9 +186,27 @@ uvvenv 3.12 # uv venv --python 3.12 .venv
 
 該当するファイル:
 
-- `home/.docker/daemon.json` — Docker Desktop の registry-mirrors。Docker Desktop 設定 → Docker Engine から Apply & Restart で反映。認証要なら `docker login nexus-docker.sk4869.info` を一度実行(資格情報は keychain に保存)。
+- `home.darwin/.docker/daemon.json` — Docker Desktop (macOS 専用) の registry-mirrors。Docker Desktop 設定 → Docker Engine から Apply & Restart で反映。認証要なら `docker login nexus-docker.sk4869.info` を一度実行(資格情報は keychain に保存)。Linux で Docker Engine 直接運用の場合は `/etc/docker/daemon.json` を root で書く。
 - `home/.npmrc` — `registry=` で Nexus を既定に。プロジェクト固有にしたければ `<repo>/.npmrc` を別途置く。認証要なら `npm login --registry=https://nexus-cli.sk4869.info/repository/npm-proxy/`。
 - `home/.config/uv/uv.toml` — `[[index]]` で Nexus を default 化。`UV_INDEX_URL` で上書きも可能。pip 側でも使うなら `~/.pip/pip.conf` の `index-url` に同じ URL を書く。
+
+## Linux (Ubuntu) で使う場合
+
+シェルを zsh に揃えてから `./install.sh` を実行する想定です:
+
+```bash
+sudo apt install -y zsh
+chsh -s "$(which zsh)"
+./install.sh
+```
+
+OS 判定で動作する箇所:
+
+- `.zprofile` の Homebrew 検出は `/home/linuxbrew/.linuxbrew/bin/brew` も見ます。
+- `.zprofile` の Java fallback は `/usr/lib/jvm/java-21-openjdk-*` 系を順に探します。
+- `.zshrc` の `bat` alias は Ubuntu の `batcat` パッケージにもフォールバックします (`bat` という名前で使いたければ `mkdir -p ~/.local/bin && ln -s "$(command -v batcat)" ~/.local/bin/bat`)。
+- Vault スクリプトの `stat` は GNU/BSD の構文差を吸収します。
+- `home.darwin/.docker/daemon.json` は macOS のみで symlink されます (Linux では `home.linux/` 配下にファイルを置けば同様に処理されます)。
 
 ## ファイルを追加する
 

@@ -77,14 +77,21 @@ if command -v eza >/dev/null 2>&1; then
   alias lst='eza -la --sort=modified --reverse --group-directories-first --git --icons=auto'
 fi
 
+# bat は Ubuntu の apt 版だと batcat にリネームされている。両方を吸収する。
 if command -v bat >/dev/null 2>&1; then
-  alias cat='bat'
-  alias batp='bat --style=plain'
-  alias batn='bat --style=numbers'
-  alias batl='bat --style=changes,numbers'
-  alias batw='bat --show-all'
-  alias batdiff='bat --diff'
-  alias preview='bat --style=numbers,changes --color=always --line-range=:200'
+  __bat_cmd=bat
+elif command -v batcat >/dev/null 2>&1; then
+  __bat_cmd=batcat
+fi
+if [[ -n "${__bat_cmd:-}" ]]; then
+  alias cat="$__bat_cmd"
+  alias batp="$__bat_cmd --style=plain"
+  alias batn="$__bat_cmd --style=numbers"
+  alias batl="$__bat_cmd --style=changes,numbers"
+  alias batw="$__bat_cmd --show-all"
+  alias batdiff="$__bat_cmd --diff"
+  alias preview="$__bat_cmd --style=numbers,changes --color=always --line-range=:200"
+  unset __bat_cmd
 fi
 
 if command -v vault >/dev/null 2>&1; then
@@ -96,3 +103,6 @@ if command -v vault >/dev/null 2>&1; then
   alias vget='vault kv get'
   alias vput='vault kv put'
 fi
+
+# 端末固有の上書きはここで吸収する (git 管理しない)。
+[[ -f "$HOME/.zshrc.local" ]] && source "$HOME/.zshrc.local"
