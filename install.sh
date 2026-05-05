@@ -3,6 +3,11 @@ set -euo pipefail
 
 DOTFILES_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 SOURCE_DIR="${DOTFILES_DIR}/home"
+case "$(uname -s)" in
+  Darwin) OS_OVERLAY_DIR="${DOTFILES_DIR}/home.darwin" ;;
+  Linux)  OS_OVERLAY_DIR="${DOTFILES_DIR}/home.linux"  ;;
+  *)      OS_OVERLAY_DIR=""                            ;;
+esac
 BACKUP_DIR="${HOME}/.dotfiles-backup/$(date +%Y%m%d%H%M%S)"
 DRY_RUN=false
 RESTORE_SECRETS=false
@@ -69,7 +74,7 @@ fi
 
 link_file() {
   local source="$1"
-  local relative_path="${source#"${SOURCE_DIR}/"}"
+  local relative_path="$2"
   local target="${HOME}/${relative_path}"
   local target_dir
   target_dir="$(dirname "${target}")"
@@ -91,9 +96,18 @@ link_file() {
   run ln -s "${source}" "${target}"
 }
 
-while IFS= read -r -d '' file; do
-  link_file "${file}"
-done < <(find "${SOURCE_DIR}" -type f -print0 | sort -z)
+link_dir() {
+  local source_dir="$1"
+  [[ -d "${source_dir}" ]] || return 0
+  while IFS= read -r -d '' file; do
+    link_file "${file}" "${file#"${source_dir}/"}"
+  done < <(find "${source_dir}" -type f -print0 | sort -z)
+}
+
+link_dir "${SOURCE_DIR}"
+if [[ -n "${OS_OVERLAY_DIR}" ]]; then
+  link_dir "${OS_OVERLAY_DIR}"
+fi
 
 if command -v git > /dev/null 2>&1; then
   log "git core.excludesfile を設定"

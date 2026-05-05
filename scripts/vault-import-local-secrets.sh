@@ -63,6 +63,14 @@ vault_path() {
   printf '%s/%s' "${VAULT_PREFIX}" "$1"
 }
 
+# stat の構文が macOS (BSD) と Linux (GNU) で異なるので吸収する。
+file_mode() {
+  case "$(uname -s)" in
+    Linux) stat -c '%a' "$1" ;;
+    *)     stat -f '%Lp' "$1" ;;
+  esac
+}
+
 vault_kv_put() {
   local path="$1"
   shift
@@ -151,7 +159,7 @@ log "SSH 秘密鍵を検出して Vault に投入します。"
 while IFS= read -r -d '' file; do
   if is_ssh_private_key "${file}"; then
     key_name="$(basename "${file}")"
-    file_mode="$(stat -f '%Lp' "${file}")"
+    file_mode="$(file_mode "${file}")"
     vault_kv_put "ssh/keys/${key_name}" "content=@${file}" "mode=${file_mode}"
   fi
 done < <(find "${SSH_DIR}" -maxdepth 1 -type f -print0 | sort -z)
@@ -159,14 +167,14 @@ done < <(find "${SSH_DIR}" -maxdepth 1 -type f -print0 | sort -z)
 log "SSH 公開鍵を検出して Vault に投入します。"
 while IFS= read -r -d '' file; do
   key_name="$(basename "${file}")"
-  file_mode="$(stat -f '%Lp' "${file}")"
+  file_mode="$(file_mode "${file}")"
   vault_kv_put "ssh/public_keys/${key_name}" "content=@${file}" "mode=${file_mode}"
 done < <(find "${SSH_DIR}" -maxdepth 1 -type f -name '*.pub' -print0 | sort -z)
 
 log "SSH 配下の XML (FileZilla 等) を Vault に投入します。"
 while IFS= read -r -d '' file; do
   xml_name="$(basename "${file}")"
-  file_mode="$(stat -f '%Lp' "${file}")"
+  file_mode="$(file_mode "${file}")"
   vault_kv_put "ssh/xml/${xml_name}" "content=@${file}" "mode=${file_mode}"
 done < <(find "${SSH_DIR}" -maxdepth 1 -type f -name '*.xml' -print0 | sort -z)
 
@@ -185,7 +193,7 @@ fi
 
 if [[ -f "${SECRETS_ENV_FILE}" ]]; then
   log "secrets env (${SECRETS_ENV_FILE}) を Vault に投入します。"
-  file_mode="$(stat -f '%Lp' "${SECRETS_ENV_FILE}")"
+  file_mode="$(file_mode "${SECRETS_ENV_FILE}")"
   vault_kv_put secrets/env "content=@${SECRETS_ENV_FILE}" "mode=${file_mode}"
 fi
 
