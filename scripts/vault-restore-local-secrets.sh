@@ -138,7 +138,9 @@ write_secret_file() {
   fi
 
   mkdir -p "$(dirname "${target}")"
-  vault_field "${path}" "${field}" > "${target}"
+  # Vault に保存された値が "\\n" のようにエスケープされている
+  # 場合があるため、リテラル "\\n" を実際の改行に置換して出力する。
+  vault_field "${path}" "${field}" | sed -e $'s/\\\\n/\\\n/g' > "${target}"
   chmod "${mode}" "${target}"
   log "復元: ${target}"
 }
