@@ -5,8 +5,8 @@ DOTFILES_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 SOURCE_DIR="${DOTFILES_DIR}/home"
 case "$(uname -s)" in
   Darwin) OS_OVERLAY_DIR="${DOTFILES_DIR}/home.darwin" ;;
-  Linux)  OS_OVERLAY_DIR="${DOTFILES_DIR}/home.linux"  ;;
-  *)      OS_OVERLAY_DIR=""                            ;;
+  Linux) OS_OVERLAY_DIR="${DOTFILES_DIR}/home.linux" ;;
+  *) OS_OVERLAY_DIR="" ;;
 esac
 BACKUP_DIR="${HOME}/.dotfiles-backup/$(date +%Y%m%d%H%M%S)"
 DRY_RUN=false
