@@ -43,6 +43,7 @@
 	lg = log --oneline --graph --decorate --all
 	last = log -1 HEAD --stat
 	uncommit = reset --soft HEAD~1
+	aic = !git-ai-commit commit
 
 [include]
 	path = ~/.gitconfig.local
@@ -54,3 +55,6 @@
 	trustExitCode = true
 [commit]
 	template = /Users/yukiono/.stCommitMsg
+[trace2]
+	eventTarget = af_unix:stream:/Users/yukiono/.git-ai/internal/daemon/trace2.sock
+	eventNesting = 10
