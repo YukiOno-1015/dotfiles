@@ -126,6 +126,7 @@ write_secret_file() {
   local field="$2"
   local target="$3"
   local mode="${4:-600}"
+  local content
 
   if [[ -e "${target}" && "${FORCE}" != "true" ]]; then
     log "既存のためスキップ: ${target}"
@@ -138,9 +139,18 @@ write_secret_file() {
   fi
 
   mkdir -p "$(dirname "${target}")"
-  # Vault に保存された値が "\\n" のようにエスケープされている
-  # 場合があるため、リテラル "\\n" を実際の改行に置換して出力する。
-  vault_field "${path}" "${field}" | sed -e $'s/\\\\n/\\\n/g' > "${target}"
+  # Vault に保存された値が JSON 文字列としてエンコードされている
+  # （前後が " で囲まれ、改行が \\n でエスケープされている）場合がある。
+  # その場合は前後の " を取り除き、リテラル \\n を実際の改行へ展開する。
+  # 通常どおり生の値が保存されている場合はそのまま書き出す。
+  content="$(vault_field "${path}" "${field}")"
+  if [[ "${content}" == '"'*'"' ]]; then
+    content="${content#\"}"
+    content="${content%\"}"
+    printf '%s' "${content}" | sed -e $'s/\\\\n/\\\n/g' > "${target}"
+  else
+    printf '%s\n' "${content}" > "${target}"
+  fi
   chmod "${mode}" "${target}"
   log "復元: ${target}"
 }
