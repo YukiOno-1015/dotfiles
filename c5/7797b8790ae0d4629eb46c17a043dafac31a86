@@ -1,0 +1,21 @@
+home/.zshrc
+  s_3f11af2771391b::t_e82750bf79430e 114
+home/.gitconfig
+  ai_agent 46,58-60
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.9",
+  "base_commit_sha": "c57797b8790ae0d4629eb46c17a043dafac31a86",
+  "prompts": {},
+  "sessions": {
+    "s_3f11af2771391b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "2144ee7c-ebdd-4a47-98ff-bbd58a7c39d7",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "YukiOno-1015 <sk4869pw4869@gmail.com>"
+    }
+  }
+}
