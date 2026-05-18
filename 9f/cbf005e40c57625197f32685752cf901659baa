@@ -1,0 +1,23 @@
+scripts/vault-import-local-secrets.sh
+  s_3f11af2771391b::t_527384af54637c 70
+scripts/vault-restore-local-secrets.sh
+  s_3f11af2771391b::t_527384af54637c 65
+install.sh
+  s_3f11af2771391b::t_527384af54637c 8-9
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.9",
+  "base_commit_sha": "9fcbf005e40c57625197f32685752cf901659baa",
+  "prompts": {},
+  "sessions": {
+    "s_3f11af2771391b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "2144ee7c-ebdd-4a47-98ff-bbd58a7c39d7",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "YukiOno-1015 <sk4869pw4869@gmail.com>"
+    }
+  }
+}
