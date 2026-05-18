@@ -1,0 +1,20 @@
+scripts/vault-restore-local-secrets.sh
+  s_3f11af2771391b::t_271b8315e0f228 133-140
+  s_3f11af2771391b::t_6a10e840f967d2 70-71,73
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.9",
+  "base_commit_sha": "b1abbed5b41e055d5073736e58bc6aa98bed46be",
+  "prompts": {},
+  "sessions": {
+    "s_3f11af2771391b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "2144ee7c-ebdd-4a47-98ff-bbd58a7c39d7",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "YukiOno-1015 <sk4869pw4869@gmail.com>"
+    }
+  }
+}
