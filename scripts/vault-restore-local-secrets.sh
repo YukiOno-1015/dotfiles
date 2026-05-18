@@ -67,8 +67,10 @@ file_mode() {
 }
 
 vault_list() {
+  # パスが存在しない場合 vault kv list は空 JSON ({}) を返す。
+  # tr で {} も除去しておき、awk が空入力で何も出力しないようにする。
   vault kv list -format=json -mount="${VAULT_MOUNT}" "$(vault_path "$1")" 2> /dev/null |
-    tr -d '[]",' |
+    tr -d '[]{}",' |
     awk 'NF { print $1 }'
 }
 
@@ -127,6 +129,14 @@ write_secret_file() {
   local target="$3"
   local mode="${4:-600}"
   local content
+
+  # Vault に保存された mode が JSON 文字列（"600" のように前後が " で
+  # 囲まれている）場合があるため、前後の " を取り除いて chmod に渡せる
+  # 形へ正規化する。生の値が保存されている場合はそのまま使う。
+  if [[ "${mode}" == '"'*'"' ]]; then
+    mode="${mode#\"}"
+    mode="${mode%\"}"
+  fi
 
   if [[ -e "${target}" && "${FORCE}" != "true" ]]; then
     log "既存のためスキップ: ${target}"
