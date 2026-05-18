@@ -106,3 +106,9 @@ fi
 
 # 端末固有の上書きはここで吸収する (git 管理しない)。
 [[ -f "$HOME/.zshrc.local" ]] && source "$HOME/.zshrc.local"
+
+# Added by git-ai installer on 2026年 5月19日 火曜日 05時36分35秒 JST
+export PATH="/Users/yukiono/.git-ai/bin:$PATH"
+
+
+[[ -f "$HOME/.secrets.env" ]] && source "$HOME/.secrets.env"
