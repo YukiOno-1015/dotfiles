@@ -62,7 +62,7 @@ vault_path() {
 file_mode() {
   case "$(uname -s)" in
     Linux) stat -c '%a' "$1" ;;
-    *)     stat -f '%Lp' "$1" ;;
+    *) stat -f '%Lp' "$1" ;;
   esac
 }
 
