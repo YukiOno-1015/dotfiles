@@ -94,6 +94,10 @@ if [[ -n "${__bat_cmd:-}" ]]; then
   unset __bat_cmd
 fi
 
+if command -v 7zz >/dev/null 2>&1; then
+  alias 7z='7zz'
+fi
+
 if command -v vault >/dev/null 2>&1; then
   alias vst='vault status'
   alias vlog='vault login'
