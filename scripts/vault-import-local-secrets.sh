@@ -27,6 +27,7 @@ usage() {
   <mount> の <prefix>/ssh/config
   <mount> の <prefix>/ssh/keys/<file-name>
   <mount> の <prefix>/ssh/public_keys/<file-name>
+  <mount> の <prefix>/ssh/authorized_keys
   <mount> の <prefix>/ssh/xml/<file-name>
   <mount> の <prefix>/aws
   <mount> の <prefix>/secrets/env
@@ -170,6 +171,12 @@ while IFS= read -r -d '' file; do
   file_mode="$(file_mode "${file}")"
   vault_kv_put "ssh/public_keys/${key_name}" "content=@${file}" "mode=${file_mode}"
 done < <(find "${SSH_DIR}" -maxdepth 1 -type f -name '*.pub' -print0 | sort -z)
+
+if [[ -f "${SSH_DIR}/authorized_keys" ]]; then
+  log "SSH authorized_keys を Vault に投入します。"
+  file_mode="$(file_mode "${SSH_DIR}/authorized_keys")"
+  vault_kv_put ssh/authorized_keys "content=@${SSH_DIR}/authorized_keys" "mode=${file_mode}"
+fi
 
 log "SSH 配下の XML (FileZilla 等) を Vault に投入します。"
 while IFS= read -r -d '' file; do

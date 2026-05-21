@@ -231,6 +231,11 @@ while IFS= read -r name; do
   write_secret_file "ssh/public_keys/${name}" content "${SSH_DIR}/${name}" "${mode}"
 done < <(vault_list ssh/public_keys)
 
+if [[ "${DRY_RUN}" == "true" ]] || vault kv get -mount="${VAULT_MOUNT}" "$(vault_path ssh/authorized_keys)" > /dev/null 2>&1; then
+  mode="$(vault_field ssh/authorized_keys mode 2> /dev/null || printf '600')"
+  write_secret_file ssh/authorized_keys content "${SSH_DIR}/authorized_keys" "${mode}"
+fi
+
 while IFS= read -r name; do
   [[ -n "${name}" ]] || continue
   mode="$(vault_field "ssh/xml/${name}" mode 2> /dev/null || printf '600')"
