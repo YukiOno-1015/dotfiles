@@ -58,3 +58,9 @@
 [trace2]
 	eventTarget = af_unix:stream:/Users/yukiono/.git-ai/internal/daemon/trace2.sock
 	eventNesting = 0
+[credential "https://github.com"]
+	helper = 
+	helper = !/opt/homebrew/bin/gh auth git-credential
+[credential "https://gist.github.com"]
+	helper = 
+	helper = !/opt/homebrew/bin/gh auth git-credential
