@@ -1,6 +1,6 @@
 [user]
-	name = YukiOno-1015
-	email = sk4869pw4869@gmail.com
+	name = jqit-yukiono
+	email = jqit.yuki.ono@gmail.com
 
 [init]
 	defaultBranch = main
@@ -57,4 +57,10 @@
 	template = /Users/yukiono/.stCommitMsg
 [trace2]
 	eventTarget = af_unix:stream:/Users/yukiono/.git-ai/internal/daemon/trace2.sock
-	eventNesting = 10
+	eventNesting = 0
+[credential "https://github.com"]
+	helper = 
+	helper = !/opt/homebrew/bin/gh auth git-credential
+[credential "https://gist.github.com"]
+	helper = 
+	helper = !/opt/homebrew/bin/gh auth git-credential
