@@ -1,0 +1,25 @@
+home/.ssh/config.d/40-proxmox-k8s-auto.conf
+  s_2ad75ec7c34b9e::t_0a94eb9693f5db 199
+  h_4b33d2bea2c4ca 198,200-206
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "60174f290e7402aa840eafc1e176e01425250446",
+  "prompts": {},
+  "humans": {
+    "h_4b33d2bea2c4ca": {
+      "author": "jqit-yukiono <jqit.yuki.ono@gmail.com>"
+    }
+  },
+  "sessions": {
+    "s_2ad75ec7c34b9e": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "93e2743d-4876-474a-a189-be6d713fbe81",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "jqit-yukiono <jqit.yuki.ono@gmail.com>"
+    }
+  }
+}
