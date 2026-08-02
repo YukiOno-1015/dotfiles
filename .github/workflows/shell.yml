@@ -1,4 +1,4 @@
-name: Shell
+name: Static Checks
 
 on:
   push:
@@ -28,3 +28,32 @@ jobs:
 
       - name: フォーマット確認
         run: shfmt -d -i 2 -ci -sr install.sh scripts/*.sh
+
+  actionlint:
+    name: GitHub Actions lint
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: チェックアウト
+        uses: actions/checkout@v6
+
+      - name: actionlint をインストール
+        run: bash <(curl -sSf https://raw.githubusercontent.com/rhysd/actionlint/main/scripts/download-actionlint.bash)
+
+      - name: 静的チェック
+        run: ./actionlint -color
+
+  secret-scan:
+    name: 秘密情報スキャン
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: チェックアウト
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: gitleaks
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
