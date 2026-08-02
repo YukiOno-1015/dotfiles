@@ -1,0 +1,19 @@
+home/.gitconfig
+  s_81fbb751963157::t_4ba135a25cffb8 64-66
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.20",
+  "base_commit_sha": "471616491143a104997b2abc9466730ce0d8a0e8",
+  "prompts": {},
+  "sessions": {
+    "s_81fbb751963157": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "84bcf7a0-5bf8-41fe-be1d-7a9d9942ff15",
+        "model": "claude-sonnet-5"
+      },
+      "human_author": "jqit-yukiono <jqit.yuki.ono@gmail.com>"
+    }
+  }
+}
