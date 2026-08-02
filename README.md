@@ -218,6 +218,25 @@ cp ~/.config/example/config.toml home/.config/example/config.toml
 ./install.sh
 ```
 
+## 静的チェック / 脆弱性チェック
+
+`install.sh` / `scripts/*.sh` の構文チェック・shellcheck・shfmt に加えて、GitHub Actions の静的チェック (actionlint) と秘密情報スキャン (gitleaks) を CI (`.github/workflows/shell.yml`) で実行しています。
+
+ローカルでも pre-commit 経由で同じチェックをコミット前に実行できます。
+
+```bash
+brew install pre-commit shellcheck shfmt gitleaks actionlint
+pre-commit install
+```
+
+任意のタイミングで全ファイルをチェックする場合:
+
+```bash
+pre-commit run --all-files
+```
+
+`home/` 配下は手書きの設定ファイルが多いため、末尾空白・改行を自動修正する hook の対象からは除外しています (shellcheck / shfmt / gitleaks / actionlint、および壊れたマージ・秘密鍵混入の検知は対象に含みます)。
+
 ## Ansible から使う場合
 
 隣の `ansible-mac` で Homebrew や macOS 設定を入れたあと、このリポジトリの `install.sh` を実行すると、CLI 環境の設定まで反映できます。

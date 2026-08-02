@@ -1,0 +1,46 @@
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: check-added-large-files
+        args: [--maxkb=1024]
+      - id: check-merge-conflict
+      - id: detect-private-key
+      # home/ 配下は手書きの設定ファイル (ssh config など) が多く、
+      # 末尾空白や改行の自動書き換えで意図しない差分を生みやすいため対象外にする。
+      - id: end-of-file-fixer
+        exclude: ^home(\.darwin|\.linux)?/
+      - id: trailing-whitespace
+        exclude: ^home(\.darwin|\.linux)?/
+      - id: mixed-line-ending
+        args: [--fix=lf]
+        exclude: ^home(\.darwin|\.linux)?/
+
+  # shellcheck / shfmt / gitleaks / actionlint はローカルの brew でインストール済みの
+  # 実体をそのまま呼ぶ (CI と同じツール・同じコマンドで二重管理を避ける)。
+  - repo: local
+    hooks:
+      - id: shellcheck
+        name: shellcheck
+        entry: shellcheck
+        language: system
+        files: ^(install\.sh|scripts/.*\.sh)$
+
+      - id: shfmt
+        name: shfmt (フォーマット確認)
+        entry: shfmt -d -i 2 -ci -sr
+        language: system
+        files: ^(install\.sh|scripts/.*\.sh)$
+
+      - id: actionlint
+        name: actionlint
+        entry: actionlint
+        language: system
+        files: ^\.github/workflows/.*\.ya?ml$
+        pass_filenames: false
+
+      - id: gitleaks
+        name: gitleaks (秘密情報スキャン)
+        entry: gitleaks protect --staged --redact --verbose
+        language: system
+        pass_filenames: false
