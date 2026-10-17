@@ -72,13 +72,7 @@ home/
 │   ├── README.md
 │   ├── config
 │   └── config.d/
-│       ├── 00-example.conf.example
-│       ├── 10-git.conf
-│       ├── 15-jump-host.conf
-│       ├── 20-sakura-vpn.conf
-│       ├── 30-aws.conf
-│       ├── 40-proxmox-k8s-auto.conf
-│       └── 90-local-manual.conf
+│       └── 00-example.conf.example   # 実際の *.conf は git 管理外 (Vault から復元)
 ├── .vault.env.example
 ├── .vimrc
 ├── .zprofile
