@@ -1,0 +1,19 @@
+home/.zprofile
+  s_7939b8761cf805::t_af930b28a8ab7b 65-71
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "0b42d587da10fc89d66fd1a65c636f589b525777",
+  "prompts": {},
+  "sessions": {
+    "s_7939b8761cf805": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "a5cb3d80-0150-4735-b77c-821e4b3cbd1d",
+        "model": "claude-sonnet-5-5"
+      },
+      "human_author": "jqit-yukiono <jqit.yuki.ono@gmail.com>"
+    }
+  }
+}
