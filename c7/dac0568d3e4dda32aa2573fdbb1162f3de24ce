@@ -1,0 +1,27 @@
+home/.profile
+  s_089048ae1cff3b::t_8c009e32591adc 1-4
+home/.ssh/config.d/40-proxmox-k8s-auto.conf
+  s_089048ae1cff3b::t_8c009e32591adc 224,233,242,251,260
+home/.zprofile
+  s_089048ae1cff3b::t_8c009e32591adc 1-4
+home/.ssh/config.d/90-local-manual.conf
+  s_089048ae1cff3b::t_8c009e32591adc 20
+home/.ssh/config.d/20-sakura-vpn.conf
+  s_089048ae1cff3b::t_8c009e32591adc 12-17
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "c7dac0568d3e4dda32aa2573fdbb1162f3de24ce",
+  "prompts": {},
+  "sessions": {
+    "s_089048ae1cff3b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "210414af-3984-48b0-aa09-1952f3863f83",
+        "model": "claude-sonnet-5-5"
+      },
+      "human_author": "jqit-yukiono <jqit.yuki.ono@gmail.com>"
+    }
+  }
+}
