@@ -1,0 +1,21 @@
+README.md
+  s_089048ae1cff3b::t_8c386af6caba79 75
+home/.ssh/README.md
+  s_089048ae1cff3b::t_b14b58c84e541c 13-18
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "739e9f7c05a2210f06d1704bd9299d5606fb96be",
+  "prompts": {},
+  "sessions": {
+    "s_089048ae1cff3b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "210414af-3984-48b0-aa09-1952f3863f83",
+        "model": "claude-sonnet-5-5"
+      },
+      "human_author": "jqit-yukiono <jqit.yuki.ono@gmail.com>"
+    }
+  }
+}
