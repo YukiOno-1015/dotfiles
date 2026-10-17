@@ -1,3 +1,7 @@
+# The following lines were added by Docker Desktop to add commands to your PATH.
+export PATH="$PATH:/Users/yukiono/.docker/bin"
+# End of Docker Desktop section.
+
 # .zshrc から読み込まれたときに PATH が重複しないようにする。
 export DOTFILES_ZPROFILE_LOADED=1
 
