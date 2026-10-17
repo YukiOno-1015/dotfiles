@@ -62,6 +62,13 @@ if ! command -v jenv >/dev/null 2>&1; then
   fi
 fi
 
+# ChatGPT.app 同梱の codex CLI がある環境だけ PATH に追加する。
+CODEX_CLI_DIR="/Applications/ChatGPT.app/Contents/Resources/codex-cli/CodexCLI.app/Contents/MacOS"
+if [[ -d "$CODEX_CLI_DIR" ]]; then
+  path+=("$CODEX_CLI_DIR")
+fi
+unset CODEX_CLI_DIR
+
 # ローカルの秘密情報関連の環境変数。このファイルは git 管理しない。
 if [[ -f "$HOME/.vault.env" ]]; then
   source "$HOME/.vault.env"
