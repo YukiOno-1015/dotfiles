@@ -1,0 +1,24 @@
+home/.zshrc
+  s_dc3f9932b79682::t_e25e918f0a8461 21-22
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "7fb362f5257aa5f98f7d8f582ab52744ca6e8092",
+  "prompts": {},
+  "humans": {
+    "h_4b33d2bea2c4ca": {
+      "author": "jqit-yukiono <jqit.yuki.ono@gmail.com>"
+    }
+  },
+  "sessions": {
+    "s_dc3f9932b79682": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "2eb6cac3-22d1-4a4e-ba93-9b38318c9176",
+        "model": "claude-sonnet-5-5"
+      },
+      "human_author": "jqit-yukiono <jqit.yuki.ono@gmail.com>"
+    }
+  }
+}
